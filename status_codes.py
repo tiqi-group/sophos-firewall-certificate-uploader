@@ -57,8 +57,8 @@ def check_firewall_response_and_return_status_code(
             return -1
 
     # ... the status code
-    status_code_pattern = r'<Status code="(\d+)">'
-    match = re.search(status_code_pattern, response.text)
+    status_pattern = r'<Status code="(\d+)">(.+?)<\/Status>'
+    match = re.search(status_pattern, response.text)
 
     if match:
         status_code = int(match.group(1))
@@ -68,11 +68,14 @@ def check_firewall_response_and_return_status_code(
             if (update_or_add, status_code) in [
                 ("add", CERTIFICATE_COULD_NOT_BE_GENERATED)
             ]:
-                logger.error(log_message)
+                logger.error(f"{log_message}\nError message: {match.group(2)}")
             else:
                 logger.info(log_message)
         else:
-            logger.warning(f"Unexpected status_code ({status_code}) encountered.")
+            logger.warning(
+                f"Unexpected status_code ({status_code}) encountered: "
+                f"{match.group(2)}"
+            )
 
     else:
         logger.warning(f"No status code found: {response.text}.")
