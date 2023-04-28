@@ -53,3 +53,7 @@ Depending on what user you execute the command with, you might need to add `sudo
 The script will first try to update the certificate with the specified name on the firewall. If the certificate name is not defined yet, the script will add the certificate to the firewall.
 
 The `loguru` logger is used to log important events, errors, and debugging information. You can customize the logger configuration as needed.
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
