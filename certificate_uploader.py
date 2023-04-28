@@ -54,7 +54,9 @@ cert_file = {
 }
 
 
-def check_firewall_response(update_or_add: str, response: requests.Response) -> bool:
+def check_firewall_response_return_status_code(
+    update_or_add: str, response: requests.Response
+) -> int:
     """Check the response from the firewall API, log appropriate messages based on the
     response, and return the status code.
 
@@ -69,7 +71,7 @@ def check_firewall_response(update_or_add: str, response: requests.Response) -> 
         sending a request to the firewall API.
 
     Returns:
-        The status code returned by the firewall API, or 0 if authentication failed or
+        The status code returned by the firewall API, or -1 if authentication failed or
         no status code was found.
     """
 
@@ -84,7 +86,7 @@ def check_firewall_response(update_or_add: str, response: requests.Response) -> 
                 "Could not authenticate with provided credentials. Please update admin "
                 "username or password."
             )
-            return 0
+            return -1
 
     # ... the status code
     status_code_pattern = r'<Status code="(\d+)">'
@@ -105,7 +107,7 @@ def check_firewall_response(update_or_add: str, response: requests.Response) -> 
         )
     else:
         logger.warning(f"No status code found: {response.text}.")
-        status_code = 0
+        status_code = -1
     return status_code
 
 
@@ -149,7 +151,7 @@ def upload_certificate(update_or_add: str) -> int:
     )
     logger.debug(response.text)
 
-    status_code = check_firewall_response(
+    status_code = check_firewall_response_return_status_code(
         update_or_add=update_or_add, response=response
     )
 
