@@ -23,7 +23,9 @@ CERTIFICATE_NAME = os.getenv("CERTIFICATE_NAME")
 CERTIFICATE_PWD = os.getenv("CERTIFICATE_PWD")
 
 # Evaluates to `True` if set to True (case-insensitive) or 1, else False
-VERIFY_SSL_CERTIFICATE = os.getenv("VERIFY_SSL_CERTIFICATE", default=False).lower() in (
+VERIFY_SSL_CERTIFICATE = os.getenv(
+    "VERIFY_SSL_CERTIFICATE", default="False"
+).lower() in (
     "true",
     "1",
 )
