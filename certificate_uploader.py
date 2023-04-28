@@ -6,6 +6,13 @@ import requests
 from dotenv import load_dotenv
 from loguru import logger
 
+from status_codes import (
+    CERTIFICATE_ADDED_SUCCESSFULLY,
+    CERTIFICATE_COULD_NOT_BE_GENERATED,
+    CERTIFICATE_NOT_FOUND,
+    CERTIFICATE_UPDATED_SUCCESSFULLY,
+)
+
 # Load environment variables from the .env file
 load_dotenv()
 
@@ -29,12 +36,59 @@ VERIFY_SSL_CERTIFICATE = os.getenv(
 
 # Construct the firewall API URL
 FIREWALL_API_URL = f"https://{FIREWALL_DOMAIN_AND_PORT}/webconsole/APIController"
-CERTIFICATE_NOT_FOUND = 500
+
+status_messages = {
+    "update": {
+        CERTIFICATE_NOT_FOUND: f"Certificate with name '{CERTIFICATE_NAME}' does not exist yet.",
+        CERTIFICATE_UPDATED_SUCCESSFULLY: f"Successfully updated certificate with name '{CERTIFICATE_NAME}'.",
+    },
+    "add": {
+        CERTIFICATE_COULD_NOT_BE_GENERATED: f"Certificate with name '{CERTIFICATE_NAME}' could not be generated. Did you pass the correct certificate path?",
+        CERTIFICATE_ADDED_SUCCESSFULLY: f"Successfully added certificate with name '{CERTIFICATE_NAME}'.",
+    },
+}
 
 cert_path = Path(f"{CERTIFICATE_PATH}")
 cert_file = {
     "file": (cert_path.name, cert_path.read_text(), "text/plain"),
 }
+
+
+def check_firewall_response(update_or_add: str, response: requests.Response) -> bool:
+    # Parse the response and extract ...
+    # ... the authentication status
+    authentication_status_pattern = r"<status>Authentication (.*)</status>"
+    match = re.search(authentication_status_pattern, response.text)
+    if match:
+        authentication_status = match.group(1)
+        if authentication_status == "Failure":
+            logger.error(
+                "Could not authenticate with provided credentials. Please update admin "
+                "username or password."
+            )
+            return 0
+
+    # ... the status code
+    status_code_pattern = r'<Status code="(\d+)">'
+    match = re.search(status_code_pattern, response.text)
+
+    if match:
+        status_code = int(match.group(1))
+
+        log_message = status_messages.get(update_or_add, {}).get(status_code)
+        log_level = (
+            logger.error
+            if (update_or_add, status_code)
+            == ("add", CERTIFICATE_COULD_NOT_BE_GENERATED)
+            else logger.info
+        )
+        log_level(log_message) if log_message else logger.warning(
+            f"Unexpected status_code ({status_code}) encountered."
+        )
+    else:
+        logger.warning(f"No status code found: {response.text}.")
+        status_code = 0
+    return status_code
 
 
 def upload_certificate(update_or_add: str) -> int:
@@ -77,14 +131,9 @@ def upload_certificate(update_or_add: str) -> int:
     )
     logger.debug(response.text)
 
-    # Parse the response and extract the status code
-    pattern = r'<Status code="(\d+)">'
-    match = re.search(pattern, response.text)
-
-    if match:
-        status_code = int(match.group(1))
-    else:
-        raise Exception("API call did not return a response!")
+    status_code = check_firewall_response(
+        update_or_add=update_or_add, response=response
+    )
 
     return status_code
 
