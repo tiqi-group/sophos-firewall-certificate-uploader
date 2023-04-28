@@ -1,8 +1,9 @@
-import re
-import requests
-from pathlib import Path
-from dotenv import load_dotenv
 import os
+import re
+from pathlib import Path
+
+import requests
+from dotenv import load_dotenv
 from loguru import logger
 
 # Load environment variables from the .env file
@@ -11,15 +12,11 @@ load_dotenv()
 # Read firewall-specific information from environment variables
 FIREWALL_API_ADMIN = os.getenv("FIREWALL_API_ADMIN")
 FIREWALL_API_ADMIN_PWD = os.getenv("FIREWALL_API_ADMIN_PWD")
-# like: "10.2.0.1:4444" or "firewall.something.ch:4444"
 FIREWALL_DOMAIN_AND_PORT = os.getenv("FIREWALL_DOMAIN_AND_PORT")
 
 # Read certificate-specific information from environment variables
-# Absolute path of the certificate to be copied
 CERTIFICATE_PATH = os.getenv("CERTIFICATE_PATH")
-# Name of the certificate to be stored in the firewall (in certificate form)
 CERTIFICATE_NAME = os.getenv("CERTIFICATE_NAME")
-# Passphrase or preshared key (in certificate form). Optional.
 CERTIFICATE_PWD = os.getenv("CERTIFICATE_PWD")
 
 # Evaluates to `True` if set to True (case-insensitive) or 1, else False
@@ -73,7 +70,10 @@ def upload_certificate(update_or_add: str) -> int:
     # Send a POST request to the firewall API with the XML string and certificate file
     data = {"reqxml": update_certificate_xml}
     response = requests.post(
-        FIREWALL_API_URL, data=data, files=cert_file, verify=VERIFY_SSL_CERTIFICATE
+        FIREWALL_API_URL,
+        data=data,
+        files=cert_file,
+        verify=VERIFY_SSL_CERTIFICATE,
     )
     logger.debug(response.text)
 
