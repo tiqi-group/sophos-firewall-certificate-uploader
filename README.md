@@ -3,6 +3,8 @@
 This repository offers a Python script that uploads or updates a certificate on a sophos firewall by interacting with its API.
 It reads necessary information, such as firewall credentials and certificate details, from environment variables and sends a POST request to the firewall API to either update or add the specified certificate.
 
+![image](static/firewall_certificate_ui.png)
+
 ## Prerequisites
 1. Linux machine
 2. Python 3.9 or later
