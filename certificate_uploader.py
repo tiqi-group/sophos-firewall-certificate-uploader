@@ -55,6 +55,24 @@ cert_file = {
 
 
 def check_firewall_response(update_or_add: str, response: requests.Response) -> bool:
+    """Check the response from the firewall API, log appropriate messages based on the
+    response, and return the status code.
+
+    This function extracts the authentication status and status code from the firewall
+    API's response. If the authentication status indicates a failure, it logs an error
+    message. If a status code is present, it logs a message based on the action
+    (update or add) and the status code. If no status code is found, it logs a warning.
+
+    Args:
+        update_or_add: The action performed on the certificate ("update" or "add").
+        response: The Response object returned by the requests library after
+        sending a request to the firewall API.
+
+    Returns:
+        The status code returned by the firewall API, or 0 if authentication failed or
+        no status code was found.
+    """
+
     # Parse the response and extract ...
     # ... the authentication status
     authentication_status_pattern = r"<status>Authentication (.*)</status>"
