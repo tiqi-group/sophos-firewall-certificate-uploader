@@ -18,8 +18,10 @@ It reads necessary information, such as firewall credentials and certificate det
 
 2. Install the required dependencies with `poetry`
     ```bash
-    poetry install
+    poetry install [--without dev]
     ```
+    You can specify `--without dev` if you do not want to install the development
+    dependencies.
 
 ## Configuration
 Create an `.env` file in the project's root directory with the following environment variables:
