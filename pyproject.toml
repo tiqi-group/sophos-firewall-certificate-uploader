@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "sophos-firewall-certificate-uploader"
+version = "0.1.0"
+description = "This repository implements an API to create a Let'sEncrypt certificate for a hosttech domain using certbot and to push that certificate to a XGS87 Sophos Firewall."
+authors = ["Mose Mueller <mosmuell@ethz.ch>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.28.2"
+python-dotenv = "^1.0.0"
+loguru = "^0.7.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
