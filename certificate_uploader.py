@@ -10,6 +10,10 @@ from status_codes import (
     check_firewall_response_and_return_status_code,
 )
 
+# Add a new sink that only shows INFO level messages
+logger.remove()  # Remove any previously added sinks
+logger.add(sys.stdout, level="INFO")
+
 # Load environment variables from the .env file
 load_dotenv()
 
