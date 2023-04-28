@@ -13,7 +13,7 @@ It reads necessary information, such as firewall credentials and certificate det
 ## Installation
 1. Clone the repository
     ```bash
-    git clone https://gitlab.phys.ethz.ch/tiqi-projects/qchub/network-services/sophos-firewall-certificate-uploader.git
+    git clone https://github.com/tiqi-group/sophos-firewall-certificate-uploader.git
     ```
 
 2. Install the required dependencies with `poetry`
@@ -32,6 +32,8 @@ CERTIFICATE_NAME=...
 CERTIFICATE_PWD=... (optional)
 VERIFY_SSL_CERTIFICATE=... (optional, default is False)
 ```
+or export those variables in your environment.
+
 Replace the placeholders with your actual values.
 - `FIREWALL_API_ADMIN`: your firewall admin username
 - `FIREWALL_API_ADMIN_PWD`: your firewall admin password
