@@ -64,15 +64,16 @@ def check_firewall_response_and_return_status_code(
         status_code = int(match.group(1))
 
         log_message = status_messages.get(update_or_add, {}).get(status_code)
-        log_level = (
-            logger.error
-            if (update_or_add, status_code)
-            == ("add", CERTIFICATE_COULD_NOT_BE_GENERATED)
-            else logger.info
-        )
-        log_level(log_message) if log_message else logger.warning(
-            f"Unexpected status_code ({status_code}) encountered."
-        )
+        if log_message:
+            if (update_or_add, status_code) in [
+                ("add", CERTIFICATE_COULD_NOT_BE_GENERATED)
+            ]:
+                logger.error(log_message)
+            else:
+                logger.info(log_message)
+        else:
+            logger.warning(f"Unexpected status_code ({status_code}) encountered.")
+
     else:
         logger.warning(f"No status code found: {response.text}.")
         status_code = -1
