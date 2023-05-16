@@ -22,11 +22,13 @@ load_dotenv()
 FIREWALL_API_ADMIN = os.getenv("FIREWALL_API_ADMIN")
 FIREWALL_API_ADMIN_PWD = os.getenv("FIREWALL_API_ADMIN_PWD")
 FIREWALL_DOMAIN_AND_PORT = os.getenv("FIREWALL_DOMAIN_AND_PORT")
+FIREWALL_CERTIFICATE_NAME = os.getenv(
+    "FIREWALL_CERTIFICATE_NAME", "default_certificate"
+)
 
 # Read certificate-specific information from environment variables
 CERTIFICATE_PATH = os.getenv("CERTIFICATE_PATH")
 PRIVATE_KEY_PATH = os.getenv("PRIVATE_KEY_PATH")
-CERTIFICATE_NAME = os.getenv("CERTIFICATE_NAME", "default_certificate")
 CERTIFICATE_PWD = os.getenv("CERTIFICATE_PWD")
 
 # Evaluates to `True` if set to True (case-insensitive) or 1, else False
@@ -68,7 +70,7 @@ def upload_certificate(update_or_add: str) -> int:
         <Set operation='{update_or_add}'>
             <Certificate>
                 <Action>UploadCertificate</Action>
-                <Name>{CERTIFICATE_NAME}</Name>
+                <Name>{FIREWALL_CERTIFICATE_NAME}</Name>
                 <Password>{CERTIFICATE_PWD if CERTIFICATE_PWD is not None else ""}</Password>
                 <CertificateFormat>pem</CertificateFormat>
                 <CertificateFile>{cert_path.name}</CertificateFile>
@@ -89,7 +91,9 @@ def upload_certificate(update_or_add: str) -> int:
     logger.debug(response.text)
 
     status_code = check_firewall_response_and_return_status_code(
-        update_or_add=update_or_add, response=response, cert_name=CERTIFICATE_NAME
+        update_or_add=update_or_add,
+        response=response,
+        cert_name=FIREWALL_CERTIFICATE_NAME,
     )
 
     return status_code
