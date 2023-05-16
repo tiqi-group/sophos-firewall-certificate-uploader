@@ -25,6 +25,7 @@ FIREWALL_DOMAIN_AND_PORT = os.getenv("FIREWALL_DOMAIN_AND_PORT")
 
 # Read certificate-specific information from environment variables
 CERTIFICATE_PATH = os.getenv("CERTIFICATE_PATH")
+PRIVATE_KEY_PATH = os.getenv("PRIVATE_KEY_PATH")
 CERTIFICATE_NAME = os.getenv("CERTIFICATE_NAME", "default_certificate")
 CERTIFICATE_PWD = os.getenv("CERTIFICATE_PWD")
 
@@ -40,9 +41,11 @@ VERIFY_SSL_CERTIFICATE = os.getenv(
 FIREWALL_API_URL = f"https://{FIREWALL_DOMAIN_AND_PORT}/webconsole/APIController"
 
 cert_path = Path(f"{CERTIFICATE_PATH}")
-cert_file = {
-    "file": (cert_path.name, cert_path.read_text(), "text/plain"),
-}
+private_key_path = Path(f"{PRIVATE_KEY_PATH}")
+cert_file = [
+    ("file", (cert_path.name, cert_path.read_text(), "text/plain")),
+    ("file", ("privkey.key", private_key_path.read_text(), "text/plain")),
+]
 
 
 def upload_certificate(update_or_add: str) -> int:
@@ -69,7 +72,7 @@ def upload_certificate(update_or_add: str) -> int:
                 <Password>{CERTIFICATE_PWD if CERTIFICATE_PWD is not None else ""}</Password>
                 <CertificateFormat>pem</CertificateFormat>
                 <CertificateFile>{cert_path.name}</CertificateFile>
-                <PrivateKeyFile></PrivateKeyFile>
+                <PrivateKeyFile>privkey.key</PrivateKeyFile>
             </Certificate>
         </Set>
     </Request>
