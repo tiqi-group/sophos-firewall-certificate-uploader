@@ -26,13 +26,14 @@ It reads necessary information, such as firewall credentials and certificate det
 ## Configuration
 Create an `.env` file in the project's root directory with the following environment variables:
 ```ini
-FIREWALL_API_ADMIN=...
-FIREWALL_API_ADMIN_PWD=...
-FIREWALL_DOMAIN_AND_PORT=...
-CERTIFICATE_PATH=...
-CERTIFICATE_NAME=...
-CERTIFICATE_PWD=... (optional)
-VERIFY_SSL_CERTIFICATE=... (optional, default is False)
+FIREWALL_API_ADMIN="..."
+FIREWALL_API_ADMIN_PWD="..."
+FIREWALL_DOMAIN_AND_PORT="..."
+FIREWALL_CERTIFICATE_NAME="..."
+CERTIFICATE_PATH="..."
+PRIVATE_KEY_PATH="..."
+CERTIFICATE_PWD="..." (optional, if key is encrypted)
+VERIFY_SSL_CERTIFICATE="..." (optional, default is False)
 ```
 or export those variables in your environment.
 
@@ -41,8 +42,9 @@ Replace the placeholders with your actual values.
 - `FIREWALL_API_ADMIN_PWD`: your firewall admin password
 - `FIREWALL_DOMAIN_AND_PORT`: your firewall domain and port
   - e.g. `firewall.example.com:4444` or `10.2.0.1:4444`
+- `FIREWALL_CERTIFICATE_NAME`: name of the certificate on the firewall
 - `CERTIFICATE_PATH`: absolute path to your certificate file
-- `CERTIFICATE_NAME`: name of the certificate on the firewall
+- `PRIVATE_KEY_PATH`: absolute path to your private key file
 - `CERTIFICATE_PWD`: certificate passphrase or preshared key (optional)
 - `VERIFY_SSL_CERTIFICATE`: set to True or 1 to enable SSL certificate verification for the API request
 
