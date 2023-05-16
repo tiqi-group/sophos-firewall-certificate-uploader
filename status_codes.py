@@ -9,6 +9,7 @@ CERTIFICATE_ADDED_SUCCESSFULLY = 200
 CERTIFICATE_NOT_FOUND = 500
 CERTIFICATE_COULD_NOT_BE_GENERATED = 500
 CERTIFICATE_ALREADY_EXISTS = 502
+INVALID_PRIVATE_KEY_OR_PASSPHRASE = 510
 
 
 def check_firewall_response_and_return_status_code(
@@ -36,10 +37,12 @@ def check_firewall_response_and_return_status_code(
         "update": {
             CERTIFICATE_NOT_FOUND: f"Certificate with name '{cert_name}' does not exist yet.",
             CERTIFICATE_UPDATED_SUCCESSFULLY: f"Successfully updated certificate with name '{cert_name}'.",
+            INVALID_PRIVATE_KEY_OR_PASSPHRASE: "Certificate could not be uploaded due to invalid private key or passphrase. Choose a proper key.",
         },
         "add": {
             CERTIFICATE_COULD_NOT_BE_GENERATED: f"Certificate with name '{cert_name}' could not be generated. Did you pass the correct certificate path?",
             CERTIFICATE_ADDED_SUCCESSFULLY: f"Successfully added certificate with name '{cert_name}'.",
+            INVALID_PRIVATE_KEY_OR_PASSPHRASE: "Certificate could not be uploaded due to invalid private key or passphrase. Choose a proper key.",
         },
     }
 
